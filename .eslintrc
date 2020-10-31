@@ -3,16 +3,19 @@
     "parser": "@typescript-eslint/parser",
     "plugins": [
       "@typescript-eslint",
-      "no-loops"
+      "no-loops",
+      "prettier"
     ],
     "extends": [
       "eslint:recommended",
       "plugin:@typescript-eslint/eslint-recommended",
       "plugin:@typescript-eslint/recommended",
-      "plugin:shopify/esnext"
+      "plugin:shopify/esnext",
+      "prettier"
     ],
     "rules": {
       "no-console": 1,
-      "no-loops/no-loops": 2
+      "no-loops/no-loops": 2,
+      "prettier/prettier": 2
     }
 }
