@@ -1,6 +1,11 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2021,
+      "sourceType": "module",
+      "project": "./tsconfig.json"
+    },
     "plugins": [
       "@typescript-eslint",
       "no-loops",
@@ -17,8 +22,32 @@
       "node": true
     },
     "rules": {
+      "import/extensions": [
+        // Severity
+        "error",
+        // Enforces the use of extensions for all imports
+        // except packages imports
+        {
+          "jsx": "never",
+          "js": "never",
+          "ts": "never",
+          "tsx": "never"
+        }
+      ],
+      "import/no-unresolved": [
+        2, 
+        { "caseSensitive": false }
+     ],
       "no-console": 1,
       "no-loops/no-loops": 2,
-      "prettier/prettier": 2
+      "prettier/prettier": 2,
+      "no-process-env": 0
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        }
+      }
     }
 }
