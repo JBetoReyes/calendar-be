@@ -1,24 +1,11 @@
 import express from 'express';
 
+import {createUser, login, renewToken} from '../controllers/auth';
+
 export const AuthRouter = express.Router();
 
-AuthRouter.post('/new', (req, res) => {
-  res.json({
-    ok: true,
-    msg: 'register',
-  });
-});
+AuthRouter.post('/new', createUser);
 
-AuthRouter.post('/', (req, res) => {
-  res.json({
-    ok: true,
-    msg: 'login',
-  });
-});
+AuthRouter.post('/', login);
 
-AuthRouter.get('/renew', (req, res) => {
-  res.json({
-    ok: true,
-    msg: 'renew',
-  });
-});
+AuthRouter.get('/renew', renewToken);
