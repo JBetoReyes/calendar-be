@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf ./build && tsc",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint ./src --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
@@ -15,7 +15,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run prettier && npm run lint"
+      "pre-commit": "lint-staged"
     }
   },
   "repository": {
@@ -38,11 +38,19 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-shopify": "^35.1.0",
     "husky": "^4.3.0",
+    "lint-staged": "^10.5.0",
     "nodemon": "^2.0.6",
     "onchange": "^7.1.0",
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "npm run prettier",
+      "npm run lint",
+      "git add"
+    ]
   }
 }

@@ -13,6 +13,9 @@
       "plugin:shopify/esnext",
       "prettier"
     ],
+    "env": {
+      "node": true
+    },
     "rules": {
       "no-console": 1,
       "no-loops/no-loops": 2,
