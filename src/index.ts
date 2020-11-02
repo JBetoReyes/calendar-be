@@ -8,6 +8,7 @@ const {PORT = 4000} = process.env;
 const app = express();
 
 app.use(express.static('public'));
+app.use(express.json());
 app.use('/api/auth', AuthRouter);
 
 app.listen(PORT, () => {
