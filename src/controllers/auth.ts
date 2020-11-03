@@ -82,9 +82,19 @@ export const login: RequestHandler = async (req, res) => {
   }
 };
 
-export const renewToken: RequestHandler = (req, res) => {
+export const renewToken: RequestHandler = async (req, res) => {
+  const {name, email, id} = (req as unknown) as Pick<
+    IUserModel,
+    'name' | 'email' | 'id'
+  >;
+  const token = await generateJWT<Pick<IUserModel, 'name' | 'email' | 'id'>>({
+    name,
+    email,
+    id,
+  });
   res.json({
     ok: true,
     msg: 'renew token',
+    token,
   });
 };

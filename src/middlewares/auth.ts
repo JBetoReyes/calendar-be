@@ -1,6 +1,7 @@
 import {check} from 'express-validator';
 
 import {fieldValidator} from './fieldValidator';
+import {jwtValidator} from './jwtValidator';
 
 export const createUserMiddlewares = [
   check('name', 'Name is required').notEmpty(),
@@ -14,3 +15,5 @@ export const loginMiddlewares = [
   check('email', 'Email is required').notEmpty().isEmail(),
   fieldValidator,
 ];
+
+export const renewTokenMiddlewares = [jwtValidator];
