@@ -1,11 +1,11 @@
 import {RequestHandler} from 'express';
+import {genSaltSync, hashSync} from 'bcryptjs';
 
 import {IUserModel, UserModel as User} from '../models/User';
 
 export const createUser: RequestHandler = async (req, res) => {
   const {name, email, password} = req.body;
   const userInDb = await User.findOne({email});
-  console.log('user in db', userInDb);
   if (userInDb) {
     res.status(400).json({
       ok: false,
@@ -13,10 +13,12 @@ export const createUser: RequestHandler = async (req, res) => {
     });
     return;
   }
+  const salt = genSaltSync();
+  const encryptedPassword = hashSync(password, salt);
   const newUser = new User({
     name,
     email,
-    password,
+    password: encryptedPassword,
   }) as IUserModel;
   try {
     await newUser.save();
