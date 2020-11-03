@@ -1,5 +1,5 @@
 import {RequestHandler} from 'express';
-import {genSaltSync, hashSync} from 'bcryptjs';
+import {genSaltSync, hashSync, compareSync} from 'bcryptjs';
 
 import {IUserModel, UserModel as User} from '../models/User';
 
@@ -36,14 +36,37 @@ export const createUser: RequestHandler = async (req, res) => {
   }
 };
 
-export const login: RequestHandler = (req, res) => {
+export const login: RequestHandler = async (req, res) => {
   const {email, password} = req.body;
-  res.json({
-    ok: true,
-    msg: 'login',
-    email,
-    password,
-  });
+  try {
+    const userInDb = (await User.findOne({email})) as IUserModel;
+    if (!userInDb) {
+      res.status(400).json({
+        ok: false,
+        msg: 'Email not found',
+      });
+      return;
+    }
+    const areEqual = compareSync(password, userInDb.password);
+    if (!areEqual) {
+      res.status(400).json({
+        ok: false,
+        msg: 'Invalid password',
+      });
+      return;
+    }
+    res.json({
+      ok: true,
+      msg: 'login',
+      email,
+      password,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Please contact the administrator',
+    });
+  }
 };
 
 export const renewToken: RequestHandler = (req, res) => {
