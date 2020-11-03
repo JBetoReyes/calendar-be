@@ -1,3 +1,4 @@
-import {fieldValidator} from './fieldValidator';
-
-export const getEventsMiddlewares = [fieldValidator];
+export const getEventsMiddlewares = [];
+export const createEventMiddlewares = [];
+export const updateEventMiddlewares = [];
+export const deleteEventMiddlewares = [];
