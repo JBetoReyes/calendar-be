@@ -19,6 +19,7 @@ const UserSchema = new Schema({
 export const UserModel = model('User', UserSchema);
 
 export interface IUserModel extends Document {
+  id: string;
   name: string;
   email: string;
   password: string;
