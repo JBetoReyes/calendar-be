@@ -1,10 +1,11 @@
 import {RequestHandler} from 'express';
 
-import {UserModel as User} from '../models/User';
+import {IUserModel, UserModel as User} from '../models/User';
 
 export const createUser: RequestHandler = async (req, res) => {
   const {name, email, password} = req.body;
-  const userInDb = User.findOne({email});
+  const userInDb = await User.findOne({email});
+  console.log('user in db', userInDb);
   if (userInDb) {
     res.status(400).json({
       ok: false,
@@ -16,15 +17,14 @@ export const createUser: RequestHandler = async (req, res) => {
     name,
     email,
     password,
-  });
+  }) as IUserModel;
   try {
     await newUser.save();
     res.json({
       ok: true,
       msg: 'register',
-      name,
-      email,
-      password,
+      name: newUser.name,
+      id: newUser.id,
     });
   } catch (error) {
     res.status(500).json({
