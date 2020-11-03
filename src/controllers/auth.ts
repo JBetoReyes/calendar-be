@@ -1,6 +1,7 @@
 import {RequestHandler} from 'express';
 import {genSaltSync, hashSync, compareSync} from 'bcryptjs';
 
+import {generateJWT} from '../helpers/jwt';
 import {IUserModel, UserModel as User} from '../models/User';
 
 export const createUser: RequestHandler = async (req, res) => {
@@ -22,11 +23,17 @@ export const createUser: RequestHandler = async (req, res) => {
   }) as IUserModel;
   try {
     await newUser.save();
+    const token = await generateJWT<Pick<IUserModel, 'name' | 'email' | 'id'>>({
+      name,
+      email,
+      id: newUser.id,
+    });
     res.json({
       ok: true,
       msg: 'register',
       name: newUser.name,
       id: newUser.id,
+      token,
     });
   } catch (error) {
     res.status(500).json({
@@ -37,7 +44,7 @@ export const createUser: RequestHandler = async (req, res) => {
 };
 
 export const login: RequestHandler = async (req, res) => {
-  const {email, password} = req.body;
+  const {name, email, password} = req.body;
   try {
     const userInDb = (await User.findOne({email})) as IUserModel;
     if (!userInDb) {
@@ -55,11 +62,17 @@ export const login: RequestHandler = async (req, res) => {
       });
       return;
     }
+    const token = await generateJWT<Pick<IUserModel, 'name' | 'email' | 'id'>>({
+      name,
+      email,
+      id: userInDb.id,
+    });
     res.json({
       ok: true,
       msg: 'login',
       email,
       password,
+      token,
     });
   } catch (err) {
     res.status(500).json({
