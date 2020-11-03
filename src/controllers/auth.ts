@@ -1,14 +1,37 @@
 import {RequestHandler} from 'express';
 
-export const createUser: RequestHandler = (req, res) => {
+import {UserModel as User} from '../models/User';
+
+export const createUser: RequestHandler = async (req, res) => {
   const {name, email, password} = req.body;
-  res.json({
-    ok: true,
-    msg: 'register',
+  const userInDb = User.findOne({email});
+  if (userInDb) {
+    res.status(400).json({
+      ok: false,
+      msg: 'Email already in use',
+    });
+    return;
+  }
+  const newUser = new User({
     name,
     email,
     password,
   });
+  try {
+    await newUser.save();
+    res.json({
+      ok: true,
+      msg: 'register',
+      name,
+      email,
+      password,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Please contact the administrator',
+    });
+  }
 };
 
 export const login: RequestHandler = (req, res) => {
