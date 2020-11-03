@@ -7,10 +7,10 @@ import {
 } from '../middlewares/auth';
 import {createUser, login, renewToken} from '../controllers/auth';
 
-export const AuthRouter = express.Router();
+export const authRouter = express.Router();
 
-AuthRouter.post('/new', createUserMiddlewares, createUser);
+authRouter.post('/new', createUserMiddlewares, createUser);
 
-AuthRouter.post('/', loginMiddlewares, login);
+authRouter.post('/', loginMiddlewares, login);
 
-AuthRouter.get('/renew', renewTokenMiddlewares, renewToken);
+authRouter.get('/renew', renewTokenMiddlewares, renewToken);
