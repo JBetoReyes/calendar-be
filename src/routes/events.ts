@@ -4,7 +4,6 @@ import {jwtValidator} from '../middlewares/jwtValidator';
 import {
   createEventMiddlewares,
   deleteEventMiddlewares,
-  getEventsMiddlewares,
   updateEventMiddlewares,
 } from '../middlewares/events';
 import {
@@ -18,7 +17,7 @@ export const eventsRouter = Router();
 
 eventsRouter.use(jwtValidator);
 
-eventsRouter.get('/', getEventsMiddlewares, getEvents);
+eventsRouter.get('/', getEvents);
 
 eventsRouter.post('/', createEventMiddlewares, createNewEvent);
 
