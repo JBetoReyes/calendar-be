@@ -3,11 +3,19 @@ import {RequestHandler} from 'express';
 import {ProtectedRequestType} from '../db/models/Auth';
 import {EventModel as Event, IEventModel} from '../db/models/Events';
 
-export const getEvents: RequestHandler = (req, res) => {
-  res.json({
-    ok: true,
-    msg: 'getEvents',
-  });
+export const getEvents: RequestHandler = async (req, res) => {
+  try {
+    const events = await Event.find({}).populate('user', 'name');
+    res.json({
+      ok: true,
+      events,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Please contact the administrator',
+    });
+  }
 };
 
 export const createNewEvent: RequestHandler<
