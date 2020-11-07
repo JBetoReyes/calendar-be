@@ -2,7 +2,7 @@ import {RequestHandler} from 'express';
 import {genSaltSync, hashSync, compareSync} from 'bcryptjs';
 
 import {generateJWT} from '../helpers/jwt';
-import {IUserModel, UserModel as User} from '../models/User';
+import {IUserModel, UserModel as User} from '../db/models/User';
 
 export const createUser: RequestHandler = async (req, res) => {
   const {name, email, password} = req.body;
