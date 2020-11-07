@@ -1,7 +1,7 @@
 import {Middleware} from 'express-validator/src/base';
 import {verify} from 'jsonwebtoken';
 
-import {IUserModel} from '../models/User';
+import {IUserModel} from '../db/models/User';
 
 export const jwtValidator: Middleware = (req, res, next): void => {
   const token = (req.headers as Record<string, string>)['x-token'];
