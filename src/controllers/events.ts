@@ -47,11 +47,54 @@ export const createNewEvent: RequestHandler<
   }
 };
 
-export const updateEvent: RequestHandler = (req, res) => {
-  res.json({
-    ok: true,
-    msg: 'updateEvent',
-  });
+type UpdateEventRequestType = {
+  params: Pick<IEventModel, 'id'>;
+} & ProtectedRequestType;
+export const updateEvent: RequestHandler<
+  Pick<IEventModel, 'id'>,
+  unknown,
+  Omit<IEventModel, 'user'>
+> = async (req, res) => {
+  const {id} = req as UpdateEventRequestType;
+  const {id: eventId} = req.params;
+  const {title, notes, start, end} = req.body;
+  try {
+    const eventToUpdate = await Event.findById(eventId);
+    if (!eventToUpdate) {
+      res.status(404).json({
+        ok: false,
+        msg: 'Event to update not found.',
+      });
+      return;
+    }
+    if ((eventToUpdate as IEventModel).user.toString() !== id) {
+      res.status(401).json({
+        ok: false,
+        msg: "You don't have enough privileges.",
+      });
+      return;
+    }
+    const newEvent = await Event.findByIdAndUpdate(
+      eventId,
+      {
+        title,
+        notes,
+        start,
+        end,
+        user: id,
+      },
+      {new: true},
+    );
+    res.json({
+      ok: true,
+      event: newEvent,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Please contact the administrator',
+    });
+  }
 };
 
 export const deleteEvent: RequestHandler = (req, res) => {

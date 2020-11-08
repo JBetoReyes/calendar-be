@@ -3,11 +3,12 @@ import {Document, model, Schema} from 'mongoose';
 import {IUserModel} from './User';
 
 export interface IEventModel extends Document {
+  id: string;
   title: string;
   notes: string;
   start: Date;
   end: Date;
-  User: IUserModel;
+  user: IUserModel | string;
 }
 
 const EventSchema = new Schema({
