@@ -47,7 +47,7 @@ export const createNewEvent: RequestHandler<
   }
 };
 
-type UpdateEventRequestType = {
+type IdRequestType = {
   params: Pick<IEventModel, 'id'>;
 } & ProtectedRequestType;
 export const updateEvent: RequestHandler<
@@ -55,7 +55,7 @@ export const updateEvent: RequestHandler<
   unknown,
   Omit<IEventModel, 'user'>
 > = async (req, res) => {
-  const {id} = req as UpdateEventRequestType;
+  const {id} = req as IdRequestType;
   const {id: eventId} = req.params;
   const {title, notes, start, end} = req.body;
   try {
@@ -97,9 +97,38 @@ export const updateEvent: RequestHandler<
   }
 };
 
-export const deleteEvent: RequestHandler = (req, res) => {
-  res.json({
-    ok: true,
-    msg: 'deleteEvent',
-  });
+export const deleteEvent: RequestHandler<
+  Pick<IEventModel, 'id'>,
+  unknown
+> = async (req, res) => {
+  const {id: eventId} = req.params;
+  const {id: uid} = req as IdRequestType;
+  try {
+    const eventToDelete = await Event.findById(eventId);
+    if (!eventToDelete) {
+      res.status(404).json({
+        ok: false,
+        msg: 'Event to delete not found.',
+      });
+      return;
+    }
+    const eventUser = (eventToDelete as IEventModel).user.toString();
+    if (eventUser !== uid) {
+      res.status(401).json({
+        ok: false,
+        msg: "You don't have enough privileges.",
+      });
+      return;
+    }
+    await eventToDelete.deleteOne();
+    res.json({
+      ok: true,
+      msg: 'Event deleted',
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Please contact the administrator.',
+    });
+  }
 };
