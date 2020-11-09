@@ -97,6 +97,9 @@ export const renewToken: RequestHandler = async (req, res) => {
   res.json({
     ok: true,
     msg: 'renew token',
+    id,
+    name,
+    email,
     token,
   });
 };
