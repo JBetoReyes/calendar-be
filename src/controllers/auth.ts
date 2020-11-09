@@ -10,7 +10,7 @@ export const createUser: RequestHandler = async (req, res) => {
   if (userInDb) {
     res.status(400).json({
       ok: false,
-      msg: 'Email already in use',
+      msg: 'Email already in use.',
     });
     return;
   }
@@ -32,13 +32,14 @@ export const createUser: RequestHandler = async (req, res) => {
       ok: true,
       msg: 'register',
       name: newUser.name,
+      email: newUser.email,
       id: newUser.id,
       token,
     });
   } catch (error) {
     res.status(500).json({
       ok: false,
-      msg: 'Please contact the administrator',
+      msg: 'Please contact the administrator.',
     });
   }
 };
@@ -50,7 +51,7 @@ export const login: RequestHandler = async (req, res) => {
     if (!userInDb) {
       res.status(400).json({
         ok: false,
-        msg: 'Email not found',
+        msg: 'Email not found.',
       });
       return;
     }
@@ -58,7 +59,7 @@ export const login: RequestHandler = async (req, res) => {
     if (!areEqual) {
       res.status(400).json({
         ok: false,
-        msg: 'Invalid password',
+        msg: 'Invalid password.',
       });
       return;
     }
@@ -69,9 +70,10 @@ export const login: RequestHandler = async (req, res) => {
     });
     res.json({
       ok: true,
-      msg: 'login',
+      msg: 'Logged in correctly.',
+      id: userInDb.id,
+      name,
       email,
-      password,
       token,
     });
   } catch (err) {
