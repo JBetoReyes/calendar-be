@@ -45,7 +45,7 @@ export const createUser: RequestHandler = async (req, res) => {
 };
 
 export const login: RequestHandler = async (req, res) => {
-  const {name, email, password} = req.body;
+  const {email, password} = req.body;
   try {
     const userInDb = (await User.findOne({email})) as IUserModel;
     if (!userInDb) {
@@ -64,16 +64,16 @@ export const login: RequestHandler = async (req, res) => {
       return;
     }
     const token = await generateJWT<Pick<IUserModel, 'name' | 'email' | 'id'>>({
-      name,
-      email,
+      name: userInDb.name,
+      email: userInDb.email,
       id: userInDb.id,
     });
     res.json({
       ok: true,
       msg: 'Logged in correctly.',
       id: userInDb.id,
-      name,
-      email,
+      name: userInDb.name,
+      email: userInDb.email,
       token,
     });
   } catch (err) {
